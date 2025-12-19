@@ -425,8 +425,8 @@ func start() -> void:
 
 		var update_checker = Global.API.UpdateChecker
 		update_checker.register(Global.API.UpdateChecker.builder()\
-														.fetcher(update_checker.github_fetcher("uchideshi34", "change-object-texture"))\
-														.downloader(update_checker.github_downloader("uchideshi34", "change-object-texture"))\
+														.fetcher(update_checker.github_fetcher("uchideshi34", "ChangeObjectTexture"))\
+														.downloader(update_checker.github_downloader("uchideshi34", "ChangeObjectTexture"))\
 														.build())
 
 	
