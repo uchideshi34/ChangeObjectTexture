@@ -270,8 +270,7 @@ func update_object_to_new_texture(item: Node2D, texture: Texture, is_custom_colo
 		if item.has_meta("dropshadow_enabled"):
 			if item.get_node("5D03") != null:
 				item.get_node("5D03").texture = texture
-
-			
+	
 
 # Return whether an object in the object library is custom colourable (taken from its modulate value)
 func is_object_at_index_custom_colourable(index: int):
@@ -381,6 +380,38 @@ func create_update_custom_history(history_data: Dictionary):
 	# If this is a new action then create a new custom record
 	var record = Global.Editor.History.CreateCustomRecord(record_script)
 
+# Check whether a semver strng 2 is greater than string one. Only works on simple comparisons - DO NOT USE THIS FUNCTION OUTSIDE THIS CONTEXT
+func compare_semver(semver1: String, semver2: String) -> bool:
+
+	outputlog("compare_semver: semver1: " + str(semver1) + " semver2" + str(semver2),2)
+	var semver1data = get_semver_data(semver1)
+	var semver2data = get_semver_data(semver2)
+
+	if semver1data == null || semver2data == null : return false
+
+	if semver1data["major"] != semver2data["major"]:
+		return semver1data["major"] < semver2data["major"]
+	if semver1data["minor"] != semver2data["minor"]:
+		return semver1data["minor"] < semver2data["minor"]
+	if semver1data["patch"] != semver2data["patch"]:
+		return semver1data["major"] < semver2data["major"]
+	
+	return false
+
+# Parse the semver string
+func get_semver_data(semver: String):
+
+	var data = {}
+
+	if semver.split(".").size() < 3: return null
+
+	return {
+		"major": int(semver.split(".")[0]),
+		"minor": int(semver.split(".")[1]),
+		"patch": int(semver.split(".")[2].split("-")[0])
+	}
+
+
 #########################################################################################################
 ##
 ## START FUNCTION
@@ -423,8 +454,12 @@ func start() -> void:
 	if Engine.has_signal("_lib_register_mod"):
 		Engine.emit_signal("_lib_register_mod", self)
 
-		var update_checker = Global.API.UpdateChecker
-		update_checker.register(Global.API.UpdateChecker.builder()\
+		var _lib_mod_meta = Global.API.ModRegistry.get_mod_info("CreepyCre._Lib").mod_meta
+		if _lib_mod_meta != null:
+			if compare_semver("1.1.2", _lib_mod_meta["version"]):
+				var update_checker = Global.API.UpdateChecker
+				
+				update_checker.register(Global.API.UpdateChecker.builder()\
 														.fetcher(update_checker.github_fetcher("uchideshi34", "ChangeObjectTexture"))\
 														.downloader(update_checker.github_downloader("uchideshi34", "ChangeObjectTexture"))\
 														.build())
