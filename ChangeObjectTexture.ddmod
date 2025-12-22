@@ -1,8 +1,9 @@
 {
     "name": "Change Object Texture",
     "unique_id": "uchideshi34.ChangeObjectTexture",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "author": "uchideshi34",
     "description": "Add feature to replace objecst in the select tool with a different texture",
     "dd_version": "1.2.0.1",
+
 }
